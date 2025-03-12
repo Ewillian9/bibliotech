@@ -3,13 +3,23 @@
 {% block title %}Mon Profil{% endblock %}
 
 {% block body %}
-    <h1>Mon Profil</h1>
-    <div>
-        <p><strong>Nom :</strong> {{ user.name }}</p>
-        <p><strong>Email :</strong> {{ user.email }}</p>
-        <p><strong>Rôle :</strong> {{ user.role }}</p>
-    </div>
-    <div>
-        <a href="{{ path('user_loans_view', {'id': user.id}) }}">Voir mon historique d'emprunts</a>
-    </div>
+<div class="max-w-md mx-auto card-library mt-10">
+  <h1 class="text-2xl font-bold mb-4">Mon Profil</h1>
+  <div class="mb-4">
+    <p class="text-sm text-gray-600">Nom</p>
+    <p class="text-lg">{{ user.name }}</p>
+  </div>
+  <div class="mb-4">
+    <p class="text-sm text-gray-600">Email</p>
+    <p class="text-lg">{{ user.email }}</p>
+  </div>
+  <div>
+    <a href="{{ path('user_loans_view', {'id': user.id}) }}" class="btn-library block text-center">
+      Voir mon historique d'emprunts
+    </a>
+  </div>
+</div>
 {% endblock %}
+
+
+
