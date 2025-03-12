@@ -22,7 +22,7 @@
             "ref": "1f5514cfa15b947298df4d771e694e578d4c204d"
         },
         "files": [
-            "./src/DataFixtures/AppFixtures.php"
+            "src/DataFixtures/AppFixtures.php"
         ]
     },
     "doctrine/doctrine-migrations-bundle": {
@@ -47,7 +47,7 @@
             "ref": "13b3e524d1038a6861ad6c7fc64e31b644ba0c54"
         },
         "files": [
-            "./config/routes/easyadmin.yaml"
+            "config/routes/easyadmin.yaml"
         ]
     },
     "phpunit/phpunit": {
@@ -313,7 +313,7 @@
             "ref": "67814b5f9794798b885cec9d3f48631424449a01"
         },
         "files": [
-            "./config/packages/twig_component.yaml"
+            "config/packages/twig_component.yaml"
         ]
     },
     "symfony/validator": {
