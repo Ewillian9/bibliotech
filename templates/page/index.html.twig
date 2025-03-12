@@ -12,6 +12,7 @@
             <h2 class="text-xl font-semibold">{{ book.title }}</h2>
             <p class="text-gray-700">par <span class="font-medium">{{ book.author }}</span></p>
             <p class="text-gray-500 text-sm">Genre : <span class="font-semibold">{{ book.genre }}</span></p>
+            <p class="text-gray-500"><span class="font-medium">{{ book.rating }}/5</span></p>
             
             {% if book.isAvailable %}
                 <p class="text-green-600 font-medium mt-2">✅ Disponible</p>
