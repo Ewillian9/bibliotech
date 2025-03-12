@@ -16,7 +16,7 @@ class Category
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $catName = null;
+    private ?string $CatName = null;
 
     /**
      * @var Collection<int, Book>
@@ -36,12 +36,12 @@ class Category
 
     public function getCatName(): ?string
     {
-        return $this->catName;
+        return $this->CatName;
     }
 
-    public function setCatName(string $catName): static
+    public function setCatName(string $CatName): static
     {
-        $this->catName = $catName;
+        $this->CatName = $CatName;
 
         return $this;
     }
