@@ -3,11 +3,10 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Loan;
-use Symfony\Component\DomCrawler\Form;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
@@ -18,26 +17,37 @@ class LoanCrudController extends AbstractCrudController
         return Loan::class;
     }
 
-    
     public function configureFields(string $pageName): iterable
     {
         return [
             FormField::addTab('Loan')
                 ->setIcon('fa fa-book')
                 ->setHelp('Panneau contenant des infos de base.'),
+
+            // Afficher le titre du livre (relier à Book)
             AssociationField::new('book')
                 ->setHelp("Le titre du livre.")
-                ->setFormTypeOption('choice_label', 'title'), 
+                ->setFormTypeOption('choice_label', 'title'),
+
+            // Afficher le nom de l'utilisateur (relier à User)
             AssociationField::new('client')
                 ->setHelp("L'utilisateur qui a emprunté le livre.")
                 ->setFormTypeOption('choice_label', 'name'),
-            TextField::new('creationDate')
+
+            // Afficher la date de création de l'emprunt
+            DateTimeField::new('created_at')
+                ->setFormat('dd/MM/yyyy HH:mm') 
                 ->setHelp("Date de création de l'emprunt."),
-            TextField::new('returnDate')
+
+            // Afficher la date de retour du livre
+            DateTimeField::new('returned_at')
+                ->setFormat('dd/MM/yyyy HH:mm')
                 ->setHelp("Date de retour du livre."),
+
+            // Afficher le statut de l'emprunt
             TextField::new('status')
                 ->setHelp("Statut de l'emprunt."),
         ];
     }
-    
 }
+
