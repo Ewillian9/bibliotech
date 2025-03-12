@@ -31,15 +31,6 @@ class UserCrudController extends AbstractCrudController
                 ->setHelp("Il s'agit d'un nom différent de l'adresse email."),
             EmailField::new('email')
                 ->setHelp("Saisir une adresse email."),
-            ImageField::new('image')
-                ->setHelp("Image de profile de l'utilisateur.")
-                ->setBasePath('media/images')
-                ->setUploadDir('public/media/images')
-                ->setUploadedFileNamePattern('[slug]-[contenthash].[extension]')
-                ->setFileConstraints(new Image(maxSize: '10M')),
-            FormField::addTab('Actions sensibles')
-                ->setIcon('fa fa-warning')
-                ->setHelp('Panneau contenant des actions sensibles.'),
         ];
     }
 }
