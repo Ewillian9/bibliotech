@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+    <h1>Mon Profil</h1>
+    <div>
+        <p><strong>Nom :</strong> {{ user.name }}</p>
+        <p><strong>Email :</strong> {{ user.email }}</p>
+        <p><strong>Rôle :</strong> {{ user.role }}</p>
+    </div>
+    <div>
+        <a href="{{ path('user_loans_view', {'id': user.id}) }}">Voir mon historique d'emprunts</a>
+    </div>
+{% endblock %}
