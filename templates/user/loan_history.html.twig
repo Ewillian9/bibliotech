@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique des Emprunts{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto card-library mt-10">
+  <h1 class="text-2xl font-bold mb-6">Historique des Emprunts de {{ user.name }}</h1>
+  {% if loans is empty %}
+    <p class="text-gray-500">Aucun emprunt trouvé.</p>
+  {% else %}
+    <div class="overflow-x-auto">
+      <table class="table-library">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Livre</th>
+            <th>Date d'emprunt</th>
+            <th>Date de retour</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for loan in loans %}
+            <tr class="hover:bg-gray-50">
+              <td>{{ loan.id }}</td>
+              <td>{{ loan.book.title }}</td>
+              <td>{{ loan.createdAt|date('d/m/Y') }}</td>
+              <td>{{ loan.returnedAt|date('d/m/Y') }}</td>
+              <td>{{ loan.status }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+  <div class="mt-6">
+    <a href="{{ path('user_profile_view', {'id': user.id}) }}" class="btn-library">
+      ⬅ Retour au profil
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+
