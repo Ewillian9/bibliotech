@@ -3,18 +3,27 @@
 {% block title %}Hello BookController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+<h1 class="text-3xl font-bold my-6">{{ book.title }}</h1>
+<p class="text-lg">Auteur : <strong>{{ book.author }}</strong></p>
+<p class="text-gray-600">Genre : <strong>{{ book.genre }}</strong></p>
+<p class="text-gray-600">Note : <strong>{{ book.rating }}/5</strong></p>
+<p class="text-gray-600">Synopsis :<br> <strong>{{ book.overview }}</strong></p>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/yosri/OneDrive/Desktop/Documents/nihel/Formation CDA/ECF/ECF_Symfony/bibliotech/src/Controller/BookController.php</code></li>
-        <li>Your template at <code>C:/Users/yosri/OneDrive/Desktop/Documents/nihel/Formation CDA/ECF/ECF_Symfony/bibliotech/templates/book/index.html.twig</code></li>
-    </ul>
-</div>
+{% if book.isAvailable %}
+    <p class="text-green-600 font-medium mt-2">✅ Ce livre est disponible</p>
+    <a href="{{ path('book_loan', { id: book.id }) }}" class="mt-4 inline-block bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-700 transition">📖 Emprunter ce livre</a>
+{% else %}
+    <p class="text-red-600 font-medium mt-2">❌ Ce livre est actuellement emprunté</p>
+{% endif %}
+<br>
+<a href="{{ path('homepage') }}" class="mt-4 inline-block text-blue-500 hover:underline">← Retour à la liste des livres</a>
+
+{% for message in app.flashes('success') %}
+    <p class="text-green-500 mt-4">{{ message }}</p>
+{% endfor %}
+{% for message in app.flashes('error') %}
+    <p class="text-red-500 mt-4">{{ message }}</p>
+{% endfor %}
+
 {% endblock %}

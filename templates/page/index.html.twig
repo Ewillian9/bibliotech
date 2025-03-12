@@ -1,12 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PageController!{% endblock %}
+{% block title %}Acceuil{% endblock %}
 
 {% block body %}
 
-<div class="example-wrapper">
-    <h1> {{titrePage }}! ✅</h1>
+<h1 class="text-3xl font-bold text-center my-6">{{ titrePage }}</h1>
 
-
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+    {% for book in books %}
+        <a href="{{ path('book_show', { id: book.id }) }}" class="block bg-white shadow-lg rounded-xl p-4 border border-gray-200 transition-transform transform hover:scale-105 hover:shadow-xl">
+            <h2 class="text-xl font-semibold">{{ book.title }}</h2>
+            <p class="text-gray-700">par <span class="font-medium">{{ book.author }}</span></p>
+            <p class="text-gray-500 text-sm">Genre : <span class="font-semibold">{{ book.genre }}</span></p>
+            <p class="text-gray-500"><span class="font-medium">{{ book.rating }}/5</span></p>
+            
+            {% if book.isAvailable %}
+                <p class="text-green-600 font-medium mt-2">✅ Disponible</p>
+            {% else %}
+                <p class="text-red-600 font-medium mt-2">❌ Indisponible</p>
+            {% endif %}
+        </a>
+    {% else %}
+        <p class="text-gray-500 text-center col-span-full">Aucun livre disponible.</p>
+    {% endfor %}
 </div>
+
 {% endblock %}
