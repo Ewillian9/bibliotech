@@ -49,6 +49,7 @@ class Book
     public function __construct()
     {
         $this->loans = new ArrayCollection();
+        $this->is_available = true;
     }
 
     public function getId(): ?int

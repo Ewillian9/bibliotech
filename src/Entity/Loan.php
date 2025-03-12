@@ -6,6 +6,8 @@ use App\Repository\LoanRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LoanRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+
 class Loan
 {
     #[ORM\Id]
@@ -27,6 +29,19 @@ class Loan
 
     #[ORM\Column]
     private ?\DateTimeImmutable $returned_at = null;
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->created_at = new \DateTimeImmutable();
+    }
+
+    #[ORM\PrePersist]
+    public function setReturnedAtValue(): void
+    {
+        $this->returned_at = (new \DateTimeImmutable())->modify('+30 days');
+    }
+
 
     public function getId(): ?int
     {
