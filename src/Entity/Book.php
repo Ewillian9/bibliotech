@@ -25,26 +25,24 @@ class Book
     #[ORM\Column(length: 80)]
     private ?string $genre = null;
 
+    #[ORM\Column]
+    private ?bool $is_available = null;
+
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'books')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
+
+    #[ORM\OneToMany(targetEntity: Loan::class, mappedBy: 'book')]
+    private Collection $loans;
+
     #[ORM\Column(type: Types::TEXT)]
     private ?string $overview = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $image = null;
 
     #[ORM\Column]
     private ?float $rating = null;
 
-    #[ORM\Column]
-    private ?bool $is_available = null;
-
-    /**
-     * @var Collection<int, Loan>
-     */
-    #[ORM\OneToMany(targetEntity: Loan::class, mappedBy: 'Book')]
-    private Collection $loans;
-
-    #[ORM\ManyToOne(inversedBy: 'books')]
-    private ?Category $catName = null;
+    #[ORM\Column(length: 255)]
+    private ?string $image = null;
 
     public function __construct()
     {
@@ -65,7 +63,6 @@ class Book
     public function setTitle(string $title): static
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -77,7 +74,6 @@ class Book
     public function setAuthor(string $author): static
     {
         $this->author = $author;
-
         return $this;
     }
 
@@ -89,43 +85,6 @@ class Book
     public function setGenre(string $genre): static
     {
         $this->genre = $genre;
-
-        return $this;
-    }
-
-    public function getOverview(): ?string
-    {
-        return $this->overview;
-    }
-
-    public function setOverview(string $overview): static
-    {
-        $this->overview = $overview;
-
-        return $this;
-    }
-
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(string $image): static
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
-    public function getRating(): ?float
-    {
-        return $this->rating;
-    }
-
-    public function setRating(float $rating): static
-    {
-        $this->rating = $rating;
-
         return $this;
     }
 
@@ -137,49 +96,50 @@ class Book
     public function setIsAvailable(bool $is_available): static
     {
         $this->is_available = $is_available;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Loan>
-     */
-    public function getLoans(): Collection
+    public function getCategory(): ?Category
     {
-        return $this->loans;
+        return $this->category;
     }
 
-    public function addLoan(Loan $loan): static
+    public function setCategory(?Category $category): static
     {
-        if (!$this->loans->contains($loan)) {
-            $this->loans->add($loan);
-            $loan->setBook($this);
-        }
-
+        $this->category = $category;
         return $this;
     }
 
-    public function removeLoan(Loan $loan): static
+    public function getOverview(): ?string
     {
-        if ($this->loans->removeElement($loan)) {
-            // set the owning side to null (unless already changed)
-            if ($loan->getBook() === $this) {
-                $loan->setBook(null);
-            }
-        }
+        return $this->overview;
+    }
 
+    public function setOverview(string $overview): static
+    {
+        $this->overview = $overview;
         return $this;
     }
 
-    public function getCatName(): ?Category
+    public function getRating(): ?float
     {
-        return $this->catName;
+        return $this->rating;
     }
 
-    public function setCatName(?Category $catName): static
+    public function setRating(float $rating): static
     {
-        $this->catName = $catName;
+        $this->rating = $rating;
+        return $this;
+    }
 
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
         return $this;
     }
 }

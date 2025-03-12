@@ -6,8 +6,6 @@ use App\Repository\LoanRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LoanRepository::class)]
-#[ORM\HasLifecycleCallbacks]
-
 class Loan
 {
     #[ORM\Id]
@@ -15,11 +13,8 @@ class Loan
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 80)]
-    private ?string $status = null;
-
     #[ORM\ManyToOne(inversedBy: 'loans')]
-    private ?Book $Book = null;
+    private ?Book $book = null;
 
     #[ORM\ManyToOne(inversedBy: 'loans')]
     private ?User $client = null;
@@ -29,6 +24,9 @@ class Loan
 
     #[ORM\Column]
     private ?\DateTimeImmutable $returned_at = null;
+
+    #[ORM\Column(length: 80)]
+    private ?string $status = null;
 
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
@@ -42,32 +40,19 @@ class Loan
         $this->returned_at = (new \DateTimeImmutable())->modify('+30 days');
     }
 
-
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): static
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
     public function getBook(): ?Book
     {
-        return $this->Book;
+        return $this->book;
     }
 
-    public function setBook(?Book $Book): static
+    public function setBook(?Book $book): static
     {
-        $this->Book = $Book;
+        $this->book = $book;
 
         return $this;
     }
@@ -104,6 +89,18 @@ class Loan
     public function setReturnedAt(\DateTimeImmutable $returned_at): static
     {
         $this->returned_at = $returned_at;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
