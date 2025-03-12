@@ -28,12 +28,10 @@ class Book
     #[ORM\Column]
     private ?bool $is_available = null;
 
-    #[ORM\ManyToOne(inversedBy: 'books')]
-    private ?Category $catName = null;
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'books')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
 
-    /**
-     * @var Collection<int, Loan>
-     */
     #[ORM\OneToMany(targetEntity: Loan::class, mappedBy: 'book')]
     private Collection $loans;
 
@@ -65,7 +63,6 @@ class Book
     public function setTitle(string $title): static
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -77,7 +74,6 @@ class Book
     public function setAuthor(string $author): static
     {
         $this->author = $author;
-
         return $this;
     }
 
@@ -89,7 +85,6 @@ class Book
     public function setGenre(string $genre): static
     {
         $this->genre = $genre;
-
         return $this;
     }
 
@@ -101,49 +96,17 @@ class Book
     public function setIsAvailable(bool $is_available): static
     {
         $this->is_available = $is_available;
-
         return $this;
     }
 
-    public function getCatName(): ?Category
+    public function getCategory(): ?Category
     {
-        return $this->catName;
+        return $this->category;
     }
 
-    public function setCatName(?Category $catName): static
+    public function setCategory(?Category $category): static
     {
-        $this->catName = $catName;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Loan>
-     */
-    public function getLoans(): Collection
-    {
-        return $this->loans;
-    }
-
-    public function addLoan(Loan $loan): static
-    {
-        if (!$this->loans->contains($loan)) {
-            $this->loans->add($loan);
-            $loan->setBook($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLoan(Loan $loan): static
-    {
-        if ($this->loans->removeElement($loan)) {
-            // set the owning side to null (unless already changed)
-            if ($loan->getBook() === $this) {
-                $loan->setBook(null);
-            }
-        }
-
+        $this->category = $category;
         return $this;
     }
 
@@ -155,7 +118,6 @@ class Book
     public function setOverview(string $overview): static
     {
         $this->overview = $overview;
-
         return $this;
     }
 
@@ -167,7 +129,6 @@ class Book
     public function setRating(float $rating): static
     {
         $this->rating = $rating;
-
         return $this;
     }
 
@@ -179,7 +140,7 @@ class Book
     public function setImage(string $image): static
     {
         $this->image = $image;
-
         return $this;
     }
 }
+

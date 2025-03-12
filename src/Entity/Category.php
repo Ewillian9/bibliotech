@@ -18,10 +18,7 @@ class Category
     #[ORM\Column(length: 255)]
     private ?string $catName = null;
 
-    /**
-     * @var Collection<int, Book>
-     */
-    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'catName')]
+    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'category')]
     private Collection $books;
 
     public function __construct()
@@ -42,13 +39,9 @@ class Category
     public function setCatName(string $catName): static
     {
         $this->catName = $catName;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Book>
-     */
     public function getBooks(): Collection
     {
         return $this->books;
@@ -58,21 +51,18 @@ class Category
     {
         if (!$this->books->contains($book)) {
             $this->books->add($book);
-            $book->setCatName($this);
+            $book->setCategory($this);
         }
-
         return $this;
     }
 
     public function removeBook(Book $book): static
     {
         if ($this->books->removeElement($book)) {
-            // set the owning side to null (unless already changed)
-            if ($book->getCatName() === $this) {
-                $book->setCatName(null);
+            if ($book->getCategory() === $this) {
+                $book->setCategory(null);
             }
         }
-
         return $this;
     }
 }

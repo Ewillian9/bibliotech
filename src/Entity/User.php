@@ -6,11 +6,13 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: '`user`')]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,7 +22,7 @@ class User
     #[ORM\Column(length: 80)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 80)]
+    #[ORM\Column(length: 80, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
@@ -62,7 +64,6 @@ class User
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -74,7 +75,6 @@ class User
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -86,7 +86,6 @@ class User
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -98,7 +97,6 @@ class User
     public function setRole(string $role): static
     {
         $this->role = $role;
-
         return $this;
     }
 
@@ -110,7 +108,6 @@ class User
     public function setCreatedAt(\DateTimeImmutable $created_at): static
     {
         $this->created_at = $created_at;
-
         return $this;
     }
 
@@ -128,19 +125,33 @@ class User
             $this->loans->add($loan);
             $loan->setClient($this);
         }
-
         return $this;
     }
 
     public function removeLoan(Loan $loan): static
     {
         if ($this->loans->removeElement($loan)) {
-            // set the owning side to null (unless already changed)
             if ($loan->getClient() === $this) {
                 $loan->setClient(null);
             }
         }
-
         return $this;
     }
+
+    // Méthodes requises par UserInterface
+    public function getRoles(): array
+    {
+        return [$this->role];
+    }
+
+    public function eraseCredentials(): void
+    {
+        // Si l'utilisateur stockait des données sensibles, on les nettoierait ici
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
 }
+
