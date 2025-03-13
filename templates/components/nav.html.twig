@@ -11,26 +11,26 @@
                 </li>
                 {% if app.user %}
                     <li>
-                        <a href="{{ path('homepage') }}"
-                        class="px-4 py-2 rounded-full bg-gray-800 hover:bg-blue-600 transition {% if app.request.attributes.get('_route') == 'homepage' %} bg-blue-500 {% endif %}">
-                            Mes emprunts
+                        <a href="{{ path('user_profile_view') }}"
+                        class="px-4 py-2 rounded-full bg-gray-800 hover:bg-blue-600 transition {% if app.request.attributes.get('_route') == 'user_profile_view' %} bg-blue-500 {% endif %}">
+                            Mon compte
                         </a>
                     </li>
                     <li>
-                        <a href="{{ path('app_logout') }}" 
+                        <a href="{{ path('app_logout') }}"
                            class="px-4 py-2 rounded-full bg-gray-800 hover:bg-red-600 transition">
                             Logout
                         </a>
                     </li>
                 {% else %}
                     <li>
-                        <a href="{{ path('app_login') }}" 
-                           class="px-4 py-2 rounded-full bg-gray-800 hover:bg-green-600 transition {% if app.request.attributes.get('_route') == 'app_login' %} bg-green-500 {% endif %}">
+                        <a href="{{ path('login_form') }}"
+                           class="px-4 py-2 rounded-full bg-gray-800 hover:bg-green-600 transition {% if app.request.attributes.get('_route') == 'login_form' %} bg-green-500 {% endif %}">
                             Login
                         </a>
                     </li>
                     <li>
-                        <a href="{{ path('register') }}" 
+                        <a href="{{ path('register') }}"
                            class="px-4 py-2 rounded-full bg-gray-800 hover:bg-purple-600 transition {% if app.request.attributes.get('_route') == 'register' %} bg-purple-500 {% endif %}">
                             Register
                         </a>
