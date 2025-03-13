@@ -19,7 +19,7 @@
     </div>
   {% endif %}
 
-  <form method="post" action="{{ path('login') }}">
+  <form method="post" action="{{ path('app_login') }}">
     <div class="mb-4">
       <label for="username" class="block text-gray-700">Email :</label>
       <input type="email" name="_username" id="username" value="{{ last_username }}" required autofocus

@@ -11,7 +11,7 @@
                 </li>
                 {% if app.user %}
                     <li>
-                        <a href="{{ path('user_profile_view') }}"
+                        <a href="{{ path('user_profile_view', {id: app.user.id}) }}"
                         class="px-4 py-2 rounded-full bg-gray-800 hover:bg-blue-600 transition {% if app.request.attributes.get('_route') == 'user_profile_view' %} bg-blue-500 {% endif %}">
                             Mon compte
                         </a>
@@ -24,15 +24,15 @@
                     </li>
                 {% else %}
                     <li>
-                        <a href="{{ path('login_form') }}"
+                        <a href="{{ path('app_login') }}"
                            class="px-4 py-2 rounded-full bg-gray-800 hover:bg-green-600 transition {% if app.request.attributes.get('_route') == 'login_form' %} bg-green-500 {% endif %}">
                             Login
                         </a>
                     </li>
                     <li>
-                        <a href="{{ path('register') }}"
+                        <a href="{{ path('homepage') }}"
                            class="px-4 py-2 rounded-full bg-gray-800 hover:bg-purple-600 transition {% if app.request.attributes.get('_route') == 'register' %} bg-purple-500 {% endif %}">
-                            Register
+                            Register homepage for now
                         </a>
                     </li>
                 {% endif %}
