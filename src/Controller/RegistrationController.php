@@ -67,7 +67,7 @@ class RegistrationController extends AbstractController
 
         $this->addFlash('success', 'Inscription réussie. Vous pouvez maintenant vous connecter.');
 
-        // Redirige vers la page de connexion (assurez-vous que la route login_form existe)
-        return $this->redirectToRoute('login_form');
+        // Redirige vers la page de connexion (assurez-vous que la route app_login existe)
+        return $this->redirectToRoute('app_login');
     }
 }
