@@ -87,9 +87,9 @@ class AppFixtures extends Fixture
             $books[] = $book;
         }
 
-        // Création des emprunts (20 par utilisateur)
+        // Création des emprunts (5 emprunts par utilisateur)
         foreach ($users as $user) {
-            for ($i = 0; $i < 20; $i++) {
+            for ($i = 0; $i < 5; $i++) {
                 $loan = new Loan();
                 $loan->setBook($faker->randomElement($books))
                      ->setClient($user)
