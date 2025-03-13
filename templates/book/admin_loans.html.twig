@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Emprunts{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-semibold mb-6">Demandes d'emprunt en attente</h1>
+
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table class="min-w-full table-auto">
+            <thead class="bg-gray-200">
+                <tr>
+                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Livre</th>
+                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Client</th>
+                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Date de demande</th>
+                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Statut</th>
+                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for loan in loans %}
+                    <tr>
+                        <td class="px-6 py-4 text-sm text-gray-800">{{ loan.book.title }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-800">{{ loan.client.name }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-800">{{ loan.createdAt|date("d/m/Y H:i") }}</td>
+                        <td class="px-6 py-4 text-sm">
+                            <span class="px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
+                                ⏳ {{ loan.status }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm space-x-2">
+                            <form action="{{ path('admin_loan_accept', {'id': loan.id}) }}" method="post" class="inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token('accept' ~ loan.id) }}">
+                                <button type="submit" 
+                                        class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors">
+                                    ✅ Accepter
+                                </button>
+                            </form>
+                            <form action="{{ path('admin_loan_refuse', {'id': loan.id}) }}" method="post" class="inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token('refuse' ~ loan.id) }}">
+                                <button type="submit" 
+                                        class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors">
+                                    ❌ Refuser
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+                            Aucune demande en attente
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

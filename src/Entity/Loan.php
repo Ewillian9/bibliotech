@@ -6,6 +6,7 @@ use App\Repository\LoanRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LoanRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Loan
 {
     #[ORM\Id]
@@ -28,6 +29,9 @@ class Loan
     #[ORM\Column(length: 80)]
     private ?string $status = null;
 
+    #[ORM\Column(length: 80)]
+    private ?string $Action = null;
+
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
     {
@@ -37,8 +41,10 @@ class Loan
     #[ORM\PrePersist]
     public function setReturnedAtValue(): void
     {
-        $this->returned_at = (new \DateTimeImmutable())->modify('+30 days');
-    }
+// Si la valeur `returned_at` est `null`, la définir à 30 jours après la date actuelle
+if ($this->returned_at === null) {
+    $this->returned_at = (new \DateTimeImmutable())->modify('+30 days');
+}    }
 
     public function getId(): ?int
     {
@@ -101,6 +107,18 @@ class Loan
     public function setStatus(string $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getAction(): ?string
+    {
+        return $this->Action;
+    }
+
+    public function setAction(string $Action): static
+    {
+        $this->Action = $Action;
 
         return $this;
     }

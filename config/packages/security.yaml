@@ -35,8 +35,9 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/book, roles: IS_AUTHENTICATED_FULLY}
         # - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, roles: PUBLIC_ACCESS }
+        # - { path: ^/, roles: PUBLIC_ACCESS }
         # - { path: ^/, roles: ROLE_USER }
 
 when@test:

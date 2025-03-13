@@ -1,0 +1,30 @@
+{# templates/book/user_loans.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Historique d'Emprunts{% endblock %}
+
+{% block body %}
+    <h1>Mon Historique d'Emprunts</h1>
+
+    {% if loans is empty %}
+        <p>Vous n'avez pas encore emprunté de livres.</p>
+    {% else %}
+        <ul>
+            {% for loan in loans %}
+                <li>
+                    <strong>{{ loan.book.title }}</strong> - 
+                    {% if loan.status == 'pending' %}
+                        <span style="color: orange;">Emprunt en attente</span>
+                    {% elseif loan.status == 'approved' %}
+                        <span style="color: green;">Emprunt accepté</span>
+                        <br>
+                        <a href="{{ asset('uploads/books/' ~ loan.book.pdfFile) }}" target="_blank">Lire en ligne</a>
+                    {% else %}
+                        <span style="color: red;">Emprunt refusé</span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
