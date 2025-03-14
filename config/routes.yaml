@@ -7,3 +7,8 @@ controllers:
 admin_dashboard:
     path: '/admin'
     controller: 'App\Controller\Admin\DashboardController::index'
+
+book_search:
+    path: /books/search
+    controller: App\Controller\BookController::search
+    methods: GET
