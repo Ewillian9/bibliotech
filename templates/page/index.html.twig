@@ -1,34 +1,100 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Page d'accueil{% endblock %}
-
-{# templates/page/index.html.twig #}
+{% block title %}Accueil - Bibliotech{% endblock %}
 
 {% block body %}
-    <div class="container mx-auto p-6">
-        <h1 class="text-4xl font-bold text-center mb-8">Liste des livres</h1>
+<div class="container mx-auto px-6 py-10">
+    <!-- ✅ Titre de la page -->
+    <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">📚 Nos Livres </h1>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <!-- ✅ Barre de filtres -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <h2 class="text-lg font-semibold mb-4">🔍 Filtrer les livres</h2>
+        <form id="filter-form" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <input type="text" id="search-query" class="input-filter" placeholder="Rechercher par titre ou auteur...">
+            <select id="search-popularity" class="input-filter">
+                <option value="">Trier par</option>
+                <option value="rating-desc">Popularité ↓</option>
+                <option value="rating-asc">Popularité ↑</option>
+            </select>
+        </form>
+    </div>
+
+    <!-- ✅ Section : Liste des livres -->
+    <section>
+        <div id="book-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {% for book in books %}
-                <div class="bg-white p-4 rounded-lg shadow-lg hover:shadow-2xl transition">
-                    <h2 class="text-xl font-semibold mb-2">{{ book.title }}</h2>
+            <div class="book-card bg-white shadow-lg rounded-lg border border-gray-200 flex flex-col h-full transition-transform duration-300 hover:shadow-xl hover:scale-105 hover:bg-gray-100">
+                
+                <!-- ✅ Image uniforme -->
+                {% if book.thumbnail %}
+                    <img src="{{ book.thumbnail }}" alt="{{ book.title }}" class="h-56 w-full object-cover rounded-t-lg">
+                {% else %}
+                    <div class="h-56 w-full bg-gray-300 flex items-center justify-center text-gray-500 rounded-t-lg">
+                        Pas d'image
+                    </div>
+                {% endif %}
 
-                    {% if book.thumbnail %}
-                        <img src="{{ book.thumbnail }}" alt="Image de {{ book.title }}" class="w-full h-auto mb-4 rounded-md">
-                    {% else %}
-                        <p class="text-sm text-gray-600 mb-4">Pas d'image disponible</p>
-                    {% endif %}
+                <!-- ✅ Contenu du livre centré -->
+                <div class="p-4 flex flex-col flex-grow justify-between">
+                    <div class="flex-grow flex flex-col justify-center text-center">
+                        <h2 class="text-lg font-semibold text-gray-800 line-clamp-2">{{ book.title }}</h2>
+                        <p class="text-sm text-gray-600 line-clamp-1">
+                            📖 {{ book.authors ? book.authors|join(', ') : 'Auteur inconnu' }}
+                        </p>
+                        <p class="text-sm text-gray-500">⭐ {{ book.rating|default('N/A') }}/5</p>
+                    </div>
 
-                    {% if book.authors %}
-                        <p class="text-sm text-gray-600">par {{ book.authors|join(', ') }}</p>
-                    {% else %}
-                        <p class="text-sm text-gray-600">Auteur(s) inconnu(s)</p>
-                    {% endif %}
-
-                    <a href="{{ path('book_detail', {'id': book.id}) }}" 
-                       class="text-blue-500 hover:text-blue-700 mt-4 inline-block">Voir les détails</a>
+                    <!-- ✅ Bouton "Voir détails" toujours en bas -->
+                    <div class="mt-auto">
+                        <a href="{{ path('book_detail', {'id': book.id}) }}" 
+                           class="block text-center bg-blue-600 text-white py-2 rounded-b-lg hover:bg-blue-700 transition">
+                            Voir les détails
+                        </a>
+                    </div>
                 </div>
+            </div>
             {% endfor %}
         </div>
-    </div>
+    </section>
+</div>
+
+<!-- ✅ JavaScript pour le filtrage dynamique -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const filterForm = document.getElementById("filter-form");
+        const bookList = document.getElementById("book-list");
+        const books = [...bookList.children];
+
+        filterForm.addEventListener("input", function () {
+            const searchQuery = document.getElementById("search-query").value.toLowerCase();
+            const searchPopularity = document.getElementById("search-popularity").value;
+
+            books.forEach(book => {
+                const title = book.querySelector("h2").textContent.toLowerCase();
+                const author = book.querySelector("p.text-sm.text-gray-600").textContent.toLowerCase();
+                const rating = parseFloat(book.querySelector("p.text-sm.text-gray-500")?.textContent.match(/([\d.]+)/)?.[1] || 0);
+
+                let matchesQuery = title.includes(searchQuery) || author.includes(searchQuery);
+                let matchesPopularity = true;
+
+                if (searchPopularity === "rating-desc") {
+                    books.sort((a, b) => parseFloat(b.querySelector("p.text-sm.text-gray-500")?.textContent.match(/([\d.]+)/)?.[1] || 0) - parseFloat(a.querySelector("p.text-sm.text-gray-500")?.textContent.match(/([\d.]+)/)?.[1] || 0));
+                } else if (searchPopularity === "rating-asc") {
+                    books.sort((a, b) => parseFloat(a.querySelector("p.text-sm.text-gray-500")?.textContent.match(/([\d.]+)/)?.[1] || 0) - parseFloat(b.querySelector("p.text-sm.text-gray-500")?.textContent.match(/([\d.]+)/)?.[1] || 0));
+                }
+
+                book.style.display = matchesQuery ? "block" : "none";
+            });
+
+            bookList.innerHTML = "";
+            books.forEach(book => bookList.appendChild(book));
+        });
+    });
+</script>
+
 {% endblock %}
+
+
+
+
