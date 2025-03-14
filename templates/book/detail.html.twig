@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du livre{% endblock %}
+
+{# templates/book/detail.html.twig #}
+
+{% block body %}
+    <div class="container mx-auto p-6">
+        <h1 class="text-4xl font-bold text-center mb-8">{{ book.title }}</h1>
+
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-3xl mx-auto">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Auteurs :</h2>
+                {% if book.authors %}
+                    <p class="text-gray-600">{{ book.authors|join(', ') }}</p>
+                {% else %}
+                    <p class="text-gray-600">Auteur(s) inconnu(s)</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Description :</h2>
+                <p class="text-gray-700">{{ book.description ?: 'Aucune description disponible.' }}</p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">ISBN :</h2>
+                <p class="text-gray-700">{{ book.isbn ?: 'Non disponible' }}</p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Publié le :</h2>
+                <p class="text-gray-700">{{ book.publishedDate ?: 'Date non disponible' }}</p>
+            </div>
+
+            {% if book.thumbnail %}
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold mb-2">Image :</h2>
+                    <img src="{{ book.thumbnail }}" alt="Image du livre" class="rounded-lg shadow-md">
+                </div>
+            {% endif %}
+
+            <div class="text-center">
+                <a href="{{ path('home') }}" class="text-blue-500 hover:text-blue-700">Retour à la liste</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

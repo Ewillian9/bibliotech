@@ -33,11 +33,14 @@ class AppFixtures extends Fixture
             'Art', 'Science', 'Informatique', 'Économie', 'Psychologie'
         ];
 
+// appeler les livres du l'API Google Books
+$books = [];
+
         // Définition des genres littéraires
-        $genresData = [
-            'Roman', 'Essai', 'Biographie', 'Poésie', 'Nouvelle', 
-            'Fantastique', 'Thriller', 'Science-Fiction', 'Manga'
-        ];
+        // $genresData = [
+        //     'Roman', 'Essai', 'Biographie', 'Poésie', 'Nouvelle', 
+        //     'Fantastique', 'Thriller', 'Science-Fiction', 'Manga'
+        // ];
 
         // Création des catégories
         $categories = [];
@@ -71,25 +74,25 @@ class AppFixtures extends Fixture
         $manager->persist($admin);
 
         // Création des livres
-        $books = [];
-        for ($i = 0; $i < 1000; $i++) {
-            $book = new Book();
-            $book->setTitle($faker->sentence(3))
-                ->setAuthor($faker->name)
-                ->setGenre($faker->randomElement($genresData))
-                ->setIsAvailable($faker->boolean(80)) // 80% des livres sont disponibles
-                ->setCategory($faker->randomElement($categories))
-                ->setRating($faker->randomFloat(1, 1, 5))
-                ->setOverview($faker->paragraph(3))
-                ->setImage($faker->imageUrl(200, 300, 'books'));
+        // $books = [];
+        // for ($i = 0; $i < 1000; $i++) {
+        //     $book = new Book();
+        //     $book->setTitle($faker->sentence(3))
+        //         ->setAuthors($faker->name)
+        //         ->setGenre($faker->randomElement($genresData))
+        //         ->setIsAvailable($faker->boolean(80)) // 80% des livres sont disponibles
+        //         ->setCategory($faker->randomElement($categories))
+        //         ->setRating($faker->randomFloat(1, 1, 5))
+        //         ->setOverview($faker->paragraph(3))
+        //         ->setImage($faker->imageUrl(200, 300, 'books'));
 
-            $manager->persist($book);
-            $books[] = $book;
-        }
+        //     $manager->persist($book);
+        //     $books[] = $book;
+        // }
 
         // Création des emprunts (20 par utilisateur)
         foreach ($users as $user) {
-            for ($i = 0; $i < 20; $i++) {
+            for ($i = 0; $i < 5; $i++) {
                 $loan = new Loan();
                 $loan->setBook($faker->randomElement($books))
                      ->setClient($user)
