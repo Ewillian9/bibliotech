@@ -9,6 +9,13 @@
 					</a>
 				</li>
 				{% if app.user %}
+					{% if is_granted('ROLE_ADMIN') %}
+						<li>
+							<a href="{{ path('admin') }}" class="px-4 py-2 rounded-full bg-gray-800 hover:bg-blue-600 transition">
+								Tableau de Bord
+							</a>
+						</li>
+					{% endif %}
 					<li>
 						<a href="{{ path('user_profile_view', {id: app.user.id}) }}" class="px-4 py-2 rounded-full bg-gray-800 hover:bg-blue-600 transition {% if app.request.attributes.get('_route') == 'user_profile_view' %} bg-blue-500 {% endif %}">
 							Mon compte
