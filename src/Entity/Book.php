@@ -19,7 +19,10 @@ class Book
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    
     #[ORM\Column(length: 80)]
+
+    // mettre a jour author en authors
     private ?string $authors = null;
 
     #[ORM\Column(length: 80)]
@@ -65,7 +68,7 @@ class Book
         $this->title = $title;
         return $this;
     }
-
+    
     public function getAuthors(): ?string
     {
         return $this->authors;

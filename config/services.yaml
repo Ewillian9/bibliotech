@@ -20,6 +20,7 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    #Ajouter le service GoogleBooksService
     # Configuration spécifique pour GoogleBooksService
     App\Service\GoogleBooksService:
         arguments:

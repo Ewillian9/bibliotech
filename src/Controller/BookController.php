@@ -17,16 +17,18 @@ class BookController extends AbstractController
         $this->googleBooksService = $googleBooksService;
     }
 
+    // Affiche la page d'accueil avec les livres récupérés depuis l'API Google Books
     #[Route('/', name: 'home', methods: ['GET'])]
     public function home(): Response
     {
-        // Utilise le service GoogleBooksService pour récupérer les livres (par exemple, "Symfony")
+        // Utilise le service GoogleBooksService pour récupérer les livres 
         $books = $this->googleBooksService->searchBooks( 30); // Limite à 30 livres
         return $this->render('page/index.html.twig', [
             'books' => $books,
         ]);
     }
 
+    
     #[Route('/books/search', name: 'book_search', methods: ['GET'])]
     public function search(Request $request): JsonResponse
     {
@@ -41,6 +43,7 @@ class BookController extends AbstractController
         }
     }
 
+    // Affiche les détails d'un livre par son ID
     #[Route('/books/{id}', name: 'book_detail', methods: ['GET'])]
 public function bookDetail(string $id): Response
 {

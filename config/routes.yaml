@@ -8,6 +8,7 @@ admin_dashboard:
     path: '/admin'
     controller: 'App\Controller\Admin\DashboardController::index'
 
+# Ajout de la route pour la recherche de livres
 book_search:
     path: /books/search
     controller: App\Controller\BookController::search
