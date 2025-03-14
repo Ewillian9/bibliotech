@@ -37,36 +37,53 @@ class GoogleBooksService
     {
         $url = "https://www.googleapis.com/books/v1/volumes/{$id}";
         
-        $params = [
-            'key' => $this->apiKey,
-        ];
+        $params = ['key' => $this->apiKey];
     
-        $response = $this->client->request('GET', $url, ['query' => $params]);
+        try {
+            $response = $this->client->request('GET', $url, ['query' => $params]);
+            $data = $response->toArray();
+            
+            return [
+                'id' => $data['id'] ?? 'ID non disponible',
+                'title' => $data['volumeInfo']['title'] ?? 'Titre inconnu',
+                'authors' => $data['volumeInfo']['authors'] ?? ['Auteur inconnu'],
+                'description' => $data['volumeInfo']['description'] ?? 'Description non disponible',
+                'isbn' => $this->extractIsbn($data['volumeInfo']),
+                'thumbnail' => $data['volumeInfo']['imageLinks']['thumbnail'] ?? null,
+                'publishedDate' => $data['volumeInfo']['publishedDate'] ?? 'Date non disponible',
+            ];
+        } catch (\Exception $e) {
+            throw new \RuntimeException("Erreur lors de la récupération du livre : " . $e->getMessage());
+        }
+    }
+        private function parseResponse(array $data): array
+    {
+        $books = [];
     
-        // Récupère la réponse de l'API
-        $data = $response->toArray();
-        
-        // Vérifie que 'volumeInfo' existe dans la réponse
-        if (!isset($data['volumeInfo'])) {
-            throw new \Exception('Détails du livre non disponibles');
+        if (!isset($data['items'])) {
+            return [];
         }
     
-        // Extraire les informations du livre à partir de 'volumeInfo'
-        return $this->parseResponse($data['volumeInfo']);
+        foreach ($data['items'] as $item) {
+            $volumeInfo = $item['volumeInfo'] ?? [];
+    
+            // Récupération correcte de l'ID du livre
+            $bookId = $item['id'] ?? 'ID non disponible';
+    
+            $books[] = [
+                'id' => $bookId,
+                'title' => $volumeInfo['title'] ?? 'Titre inconnu',
+                'authors' => $volumeInfo['authors'] ?? ['Auteur inconnu'],
+                'description' => $volumeInfo['description'] ?? 'Description non disponible',
+                'isbn' => $this->extractIsbn($volumeInfo),
+                'thumbnail' => $volumeInfo['imageLinks']['thumbnail'] ?? null,
+                'publishedDate' => $volumeInfo['publishedDate'] ?? 'Date non disponible',
+            ];
+        }
+    
+        return $books;
     }
-    private function parseResponse(array $volumeInfo): array
-    {
-        // Récupère les informations du livre à partir de 'volumeInfo'
-        return [
-            'id' => $volumeInfo['id'] ?? 'ID non disponible',
-            'title' => $volumeInfo['title'] ?? 'Titre inconnu',
-            'authors' => $volumeInfo['authors'] ?? ['Auteur inconnu'],
-            'description' => $volumeInfo['description'] ?? 'Description non disponible',
-            'isbn' => $this->extractIsbn($volumeInfo),
-            'thumbnail' => $volumeInfo['imageLinks']['thumbnail'] ?? null,
-            'publishedDate' => $volumeInfo['publishedDate'] ?? 'Date non disponible',
-        ];
-    }
+    
     private function extractIsbn(array $volume): ?string
     {
         foreach ($volume['industryIdentifiers'] ?? [] as $identifier) {

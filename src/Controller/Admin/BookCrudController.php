@@ -30,7 +30,7 @@ class BookCrudController extends AbstractCrudController
                 ->setHelp("Le titre du livre."),
             
             // Afficher l'auteur du livre
-            TextField::new('author')
+            TextField::new('authors')
                 ->setHelp("L'auteur du livre."),
 
             // Afficher le genre du livre

@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Loan;
+use Dom\Text;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -25,12 +26,12 @@ class LoanCrudController extends AbstractCrudController
                 ->setHelp('Panneau contenant des infos de base.'),
 
             // Afficher le titre du livre (relier à Book)
-            AssociationField::new('book')
+            TextField::new('book.title', 'Titre du livre')
                 ->setHelp("Le titre du livre.")
                 ->setFormTypeOption('choice_label', 'title'),
 
             // Afficher le nom de l'utilisateur (relier à User)
-            AssociationField::new('client')
+            TextField::new('client.name', 'Nom de l\'utilisateur')
                 ->setHelp("L'utilisateur qui a emprunté le livre.")
                 ->setFormTypeOption('choice_label', 'name'),
 
