@@ -24,4 +24,6 @@ services:
     # Configuration spécifique pour GoogleBooksService
     App\Service\GoogleBooksService:
         arguments:
+            $client: '@Symfony\Contracts\HttpClient\HttpClientInterface'
             $apiKey: '%env(GOOGLE_BOOKS_API_KEY)%'
+    

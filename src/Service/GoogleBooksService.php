@@ -35,7 +35,7 @@ class GoogleBooksService
         }
     }
 
-    // Récupère les détails d'un livre par son ID
+    // 
     public function getBookById(string $id): array
     {
         $url = "https://www.googleapis.com/books/v1/volumes/{$id}";
@@ -86,9 +86,7 @@ class GoogleBooksService
     
         return $books;
     }
-
-
-    // Récupère l'ISBN du livre
+    
     private function extractIsbn(array $volume): ?string
     {
         foreach ($volume['industryIdentifiers'] ?? [] as $identifier) {

@@ -24,34 +24,39 @@ class AppFixtures extends Fixture
     {
         $faker = Factory::create();
 
-        // Définition des rôles possibles
-        $roles = ['ROLE_USER', 'ROLE_ADMIN'];
-
-        // Définition des catégories
+        // 📌 Définition des catégories
         $categoriesData = [
-            'Littérature', 'Science-Fiction', 'Histoire', 'Philosophie', 
+            'Littérature', 'Science-Fiction', 'Histoire', 'Philosophie',
             'Art', 'Science', 'Informatique', 'Économie', 'Psychologie'
         ];
 
-// appeler les livres du l'API Google Books
-$books = [];
-
-        // Définition des genres littéraires
-        // $genresData = [
-        //     'Roman', 'Essai', 'Biographie', 'Poésie', 'Nouvelle', 
-        //     'Fantastique', 'Thriller', 'Science-Fiction', 'Manga'
-        // ];
-
-        // Création des catégories
+        // 📌 Vérifier si les catégories existent déjà, sinon les créer
         $categories = [];
         foreach ($categoriesData as $catName) {
-            $category = new Category();
-            $category->setCatName($catName);
-            $manager->persist($category);
+            $category = $manager->getRepository(Category::class)->findOneBy(['catName' => $catName]);
+            if (!$category) {
+                $category = new Category();
+                $category->setCatName($catName);
+                $manager->persist($category);
+            }
             $categories[] = $category;
         }
 
-        // Création des utilisateurs
+        // 📌 Récupération des livres déjà importés
+        $books = $manager->getRepository(Book::class)->findAll();
+        if (empty($books)) {
+            throw new \Exception("Aucun livre trouvé en base. Assurez-vous d'avoir importé les livres via l'API Google Books.");
+        }
+
+        // 📌 Assignation aléatoire des livres à une catégorie si ce n'est pas encore fait
+        foreach ($books as $book) {
+            if (!$book->getCategory()) {
+                $book->setCategory($faker->randomElement($categories));
+                $manager->persist($book);
+            }
+        }
+
+        // 📌 Création des utilisateurs
         $users = [];
         for ($i = 0; $i < 10; $i++) {
             $user = new User();
@@ -64,7 +69,7 @@ $books = [];
             $users[] = $user;
         }
 
-        // Création d'un administrateur
+        // 📌 Création d'un administrateur
         $admin = new User();
         $admin->setName('Admin User')
             ->setEmail('admin@example.com')
@@ -73,24 +78,7 @@ $books = [];
 
         $manager->persist($admin);
 
-        // Création des livres
-        // $books = [];
-        // for ($i = 0; $i < 1000; $i++) {
-        //     $book = new Book();
-        //     $book->setTitle($faker->sentence(3))
-        //         ->setAuthors($faker->name)
-        //         ->setGenre($faker->randomElement($genresData))
-        //         ->setIsAvailable($faker->boolean(80)) // 80% des livres sont disponibles
-        //         ->setCategory($faker->randomElement($categories))
-        //         ->setRating($faker->randomFloat(1, 1, 5))
-        //         ->setOverview($faker->paragraph(3))
-        //         ->setImage($faker->imageUrl(200, 300, 'books'));
-
-        //     $manager->persist($book);
-        //     $books[] = $book;
-        // }
-
-        // Création des emprunts (20 par utilisateur)
+        // 📌 Création des emprunts (5 par utilisateur)
         foreach ($users as $user) {
             for ($i = 0; $i < 5; $i++) {
                 $loan = new Loan();
@@ -104,6 +92,7 @@ $books = [];
             }
         }
 
+        // 🚀 Sauvegarde en base
         $manager->flush();
     }
 }
