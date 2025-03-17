@@ -15,7 +15,7 @@ class GoogleBooksService
     }
 
     // Récupère les livres depuis l'API Google Books
-    public function searchBooks(string $query, int $maxResults = 10): array
+    public function searchBooks(string $query, int $maxResults = 30): array
     {
         $url = 'https://www.googleapis.com/books/v1/volumes';
 
