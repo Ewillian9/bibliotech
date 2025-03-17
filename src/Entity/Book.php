@@ -19,10 +19,7 @@ class Book
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    
     #[ORM\Column(length: 80)]
-
-    // mettre a jour author en authors
     private ?string $authors = null;
 
     #[ORM\Column(length: 80)]
@@ -41,9 +38,9 @@ class Book
     #[ORM\Column(type: Types::TEXT)]
     private ?string $overview = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $rating = null;
-
+    
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
@@ -68,17 +65,28 @@ class Book
         $this->title = $title;
         return $this;
     }
-    
+
     public function getAuthors(): ?string
     {
         return $this->authors;
     }
 
-    public function setAuthors(string $authors): static
-    {
-        $this->authors = $authors;
-        return $this;
+    // public function setAuthors(string $authors): static
+    // {
+    //     $this->authors = $authors;
+    //     return $this;
+    // }
+    public function setAuthors(array|string $authors): static
+{
+    // Si c'est un tableau, on le transforme en string
+    if (is_array($authors)) {
+        $authors = implode(', ', $authors);
     }
+
+    $this->authors = $authors;
+    return $this;
+}
+
 
     public function getGenre(): ?string
     {
