@@ -41,8 +41,8 @@ class BookCrudController extends AbstractCrudController
             // Afficher l'image de couverture du livre
             ImageField::new('image')
                 ->setHelp("Image de couverture du livre.")
-                ->setBasePath('media/images')
-                ->setUploadDir('public/media/images')
+                ->setBasePath('uploads/images')
+                ->setUploadDir('public/uploads/images')
                 ->setUploadedFileNamePattern('[slug]-[contenthash].[extension]')
                 ->setFileConstraints(new Image(maxSize: '10M')),
 
