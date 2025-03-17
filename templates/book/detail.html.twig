@@ -1,48 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détails du livre{% endblock %}
-
-{# templates/book/detail.html.twig #}
-
 {% block body %}
-    <div class="container mx-auto p-6">
-        <h1 class="text-4xl font-bold text-center mb-8">{{ book.title }}</h1>
+<div class="container mx-auto p-6">
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">
+            {{ book.title }}
+        </h1>
 
-        <div class="bg-white p-6 rounded-lg shadow-lg max-w-3xl mx-auto">
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-2">Auteurs :</h2>
-                {% if book.authors %}
-                    <p class="text-gray-600">{{ book.authors|join(', ') }}</p>
-                {% else %}
-                    <p class="text-gray-600">Auteur(s) inconnu(s)</p>
-                {% endif %}
-            </div>
-
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-2">Description :</h2>
-                <p class="text-gray-700">{{ book.description ?: 'Aucune description disponible.' }}</p>
-            </div>
-
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-2">ISBN :</h2>
-                <p class="text-gray-700">{{ book.isbn ?: 'Non disponible' }}</p>
-            </div>
-
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-2">Publié le :</h2>
-                <p class="text-gray-700">{{ book.publishedDate ?: 'Date non disponible' }}</p>
-            </div>
-
-            {% if book.thumbnail %}
-                <div class="mb-6">
-                    <h2 class="text-xl font-semibold mb-2">Image :</h2>
-                    <img src="{{ book.thumbnail }}" alt="Image du livre" class="rounded-lg shadow-md">
+        <div class="flex flex-col md:flex-row gap-6">
+            {% if book.image %}
+                <div class="md:w-1/2">
+                    <img src="{{ book.image }}" alt="Couverture" class="w-full h-72 object-cover rounded shadow" />
+                </div>
+            {% else %}
+                <div class="md:w-1/2 h-72 bg-gray-300 flex items-center justify-center text-gray-500 rounded">
+                    Pas d'image
                 </div>
             {% endif %}
 
-            <div class="text-center">
-                <a href="{{ path('home') }}" class="text-blue-500 hover:text-blue-700">Retour à la liste</a>
+            <div class="md:w-1/2 flex flex-col justify-center">
+                <p class="text-lg text-gray-700 mb-4">Auteur(s) : {{ book.authors }}</p>
+
+                {% if book.overview %}
+                    <p class="text-gray-700 mb-4">{{ book.overview }}</p>
+                {% endif %}
+
+                {% if book.rating is not null %}
+                    <p class="text-gray-700 mb-4">⭐ {{ book.rating }}/5</p>
+                {% endif %}
+
+                <a href="{{ path('home') }}"
+                   class="mt-auto inline-block px-6 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition">
+                   Retour
+                </a>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

@@ -1,34 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Page d'accueil{% endblock %}
-
-{# templates/page/index.html.twig #}
-
 {% block body %}
-    <div class="container mx-auto p-6">
-        <h1 class="text-4xl font-bold text-center mb-8">Liste des livres</h1>
+<div class="container mx-auto p-6">
+    <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">Liste des livres (BDD)</h1>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {% for book in books %}
-                <div class="bg-white p-4 rounded-lg shadow-lg hover:shadow-2xl transition">
-                    <h2 class="text-xl font-semibold mb-2">{{ book.title }}</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for book in books %}
+            <div class="bg-white p-4 rounded-lg shadow-lg transition transform hover:shadow-2xl hover:scale-105 flex flex-col">
+                <h2 class="text-xl font-semibold mb-2 text-gray-800">
+                    {{ book.title }}
+                </h2>
 
-                    {% if book.thumbnail %}
-                        <img src="{{ book.thumbnail }}" alt="Image de {{ book.title }}" class="w-full h-auto mb-4 rounded-md">
-                    {% else %}
-                        <p class="text-sm text-gray-600 mb-4">Pas d'image disponible</p>
-                    {% endif %}
+                {% if book.image %}
+                    <img src="{{ book.image }}" alt="Couverture" class="w-full h-56 mb-4 rounded-md object-cover" />
+                {% else %}
+                    <div class="h-56 w-full bg-gray-300 flex items-center justify-center text-gray-500 mb-4 rounded-md">
+                        Pas d'image
+                    </div>
+                {% endif %}
 
-                    {% if book.authors %}
-                        <p class="text-sm text-gray-600">par {{ book.authors|join(', ') }}</p>
-                    {% else %}
-                        <p class="text-sm text-gray-600">Auteur(s) inconnu(s)</p>
-                    {% endif %}
+                {% if book.authors %}
+                    <p class="text-sm text-gray-600">par {{ book.authors }}</p>
+                {% else %}
+                    <p class="text-sm text-gray-600">Auteur(s) inconnu(s)</p>
+                {% endif %}
 
-                    <a href="{{ path('book_detail', {'id': book.id}) }}" 
-                       class="text-blue-500 hover:text-blue-700 mt-4 inline-block">Voir les détails</a>
-                </div>
-            {% endfor %}
-        </div>
+                {% if book.rating is not null %}
+                    <p class="text-sm text-gray-500 mt-1">⭐ {{ book.rating }}/5</p>
+                {% endif %}
+
+                <a href="{{ path('book_detail', {'id': book.id}) }}"
+                   class="mt-auto inline-block bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition">
+                   Voir les détails
+                </a>
+            </div>
+        {% endfor %}
     </div>
+</div>
 {% endblock %}
+
