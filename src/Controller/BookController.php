@@ -59,5 +59,4 @@ class BookController extends AbstractController
             return new Response('<h1>Erreur</h1><p>Le livre n\'a pas été trouvé ou il y a eu un problème lors de la récupération des détails.</p>', 500);
         }
     }
-
 }
