@@ -29,7 +29,7 @@ class Book
     private ?bool $is_available = null;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'books')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Category $category = null;
 
     #[ORM\OneToMany(targetEntity: Loan::class, mappedBy: 'book')]
@@ -40,7 +40,7 @@ class Book
 
     #[ORM\Column(nullable: true)]
     private ?float $rating = null;
-    
+
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
@@ -49,6 +49,21 @@ class Book
         $this->loans = new ArrayCollection();
         $this->is_available = true;
     }
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $googleId = null;
+
+    public function getGoogleId(): ?string
+    {
+        return $this->googleId;
+    }
+
+    public function setGoogleId(?string $googleId): static
+    {
+        $this->googleId = $googleId;
+        return $this;
+    }
+
 
     public function getId(): ?int
     {
@@ -77,15 +92,15 @@ class Book
     //     return $this;
     // }
     public function setAuthors(array|string $authors): static
-{
-    // Si c'est un tableau, on le transforme en string
-    if (is_array($authors)) {
-        $authors = implode(', ', $authors);
-    }
+    {
+        // Si c'est un tableau, on le transforme en string
+        if (is_array($authors)) {
+            $authors = implode(', ', $authors);
+        }
 
-    $this->authors = $authors;
-    return $this;
-}
+        $this->authors = $authors;
+        return $this;
+    }
 
 
     public function getGenre(): ?string
@@ -154,4 +169,3 @@ class Book
         return $this;
     }
 }
-
