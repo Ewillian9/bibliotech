@@ -1,6 +1,8 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\Book;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Service\GoogleBooksService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,10 +13,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class BookController extends AbstractController
 {
     private GoogleBooksService $googleBooksService;
+    private $entityManager;
 
-    public function __construct(GoogleBooksService $googleBooksService)
+    public function __construct(GoogleBooksService $googleBooksService, EntityManagerInterface $entityManager)
     {
         $this->googleBooksService = $googleBooksService;
+        $this->entityManager = $entityManager;
     }
 
     // Affiche la page d'accueil avec les livres récupérés depuis l'API Google Books
@@ -58,5 +62,27 @@ class BookController extends AbstractController
             // Affiche un message d'erreur sans template spécifique
             return new Response('<h1>Erreur</h1><p>Le livre n\'a pas été trouvé ou il y a eu un problème lors de la récupération des détails.</p>', 500);
         }
+    }
+
+    #[Route('/book/{id}/pdf', name: 'book_pdf')]
+    public function showPdf(string $id): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            // If the user is not logged in, throw a 403 Forbidden exception
+            throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à ce document.');
+        }
+        // Find the book by googleId
+        $book = $this->entityManager->getRepository(Book::class)->findOneBy(['googleId' => $id]);
+
+        if (!$book) {
+            throw $this->createNotFoundException('Livre introuvable.');
+        }
+
+        // Path to the PDF file
+        $pdfPath = $this->getParameter('kernel.project_dir') . '/public/pdf/book.pdf';
+
+        return $this->file($pdfPath);
     }
 }

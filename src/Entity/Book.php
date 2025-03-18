@@ -44,21 +44,22 @@ class Book
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
+    #[ORM\Column(length : 255)]
+    private ?string $googleId = null;
+
     public function __construct()
     {
         $this->loans = new ArrayCollection();
         $this->is_available = true;
     }
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $googleId = null;
 
     public function getGoogleId(): ?string
     {
         return $this->googleId;
     }
 
-    public function setGoogleId(?string $googleId): static
+    public function setGoogleId(?string $googleId): self
     {
         $this->googleId = $googleId;
         return $this;

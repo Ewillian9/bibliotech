@@ -50,7 +50,7 @@ class GoogleBooksService
     private function saveBookIfNotExists(array $bookData): void
     {
         // Check if book already exists in the database
-        if ($this->bookRepository->findOneBy(['title' => $bookData['title']])) {
+        if ($this->bookRepository->findOneBy(['googleId' => $bookData['id']])) {
             return;
         }
 
@@ -62,8 +62,8 @@ class GoogleBooksService
             ->setIsAvailable(true)
             ->setOverview($bookData['description'] ?? 'Pas de description disponible')
             ->setRating($bookData['rating'] ?? 0)
-            ->setImage($bookData['thumbnail'] ?? 'default.jpg');
-
+            ->setImage($bookData['thumbnail'] ?? 'default.jpg')
+            ->setGoogleId($bookData['id']);
         $categoryName = $bookData['genre'] ?? 'Inconnu';
         $category = $this->entityManager->getRepository(Category::class)->findOneBy(['catName' => $categoryName]);
         
