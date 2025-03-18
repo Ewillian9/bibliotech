@@ -6,6 +6,7 @@ use App\Repository\LoanRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LoanRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Loan
 {
     #[ORM\Id]
