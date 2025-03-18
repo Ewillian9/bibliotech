@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Loan;
+use App\Repository\LoanRepository;
 
 class BookController extends AbstractController
 {
@@ -52,11 +54,18 @@ class BookController extends AbstractController
     public function bookDetail(string $id): Response
     {
         try {
-            // Récupère les détails du livre par son ID
+            $user = $this->getUser();
             $bookDetails = $this->googleBooksService->getBookById($id);
-            
+            $book = $this->entityManager->getRepository(Book::class)->findOneBy(['googleId' => $id]);
+            $loan = $this->entityManager->getRepository(Loan::class)->findOneBy([
+                'book' => $book,
+                'client' => $user,  // Check if the logged-in user is the client of the loan
+                'status' => 'En cours',  // Ensure the loan is active, if needed
+            ]);
+
             return $this->render('book/detail.html.twig', [
                 'book' => $bookDetails,
+                'hasLoaned' => $loan ? true : false,
             ]);
         } catch (\Exception $e) {
             // Affiche un message d'erreur sans template spécifique
@@ -68,19 +77,27 @@ class BookController extends AbstractController
     public function showPdf(string $id): Response
     {
         $user = $this->getUser();
-
+        $book = $this->entityManager->getRepository(Book::class)->findOneBy(['googleId' => $id]);
+        $loan = $this->entityManager->getRepository(Loan::class)->findOneBy([
+            'book' => $book,
+            'client' => $user,  // Check if the logged-in user is the client of the loan
+            'status' => 'En cours',  // Ensure the loan is active, if needed
+        ]);
+        
         if (!$user) {
             // If the user is not logged in, throw a 403 Forbidden exception
             throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à ce document.');
         }
-        // Find the book by googleId
-        $book = $this->entityManager->getRepository(Book::class)->findOneBy(['googleId' => $id]);
 
+        if (!$loan) {
+            // If the user has not loaned the book, deny access
+            throw $this->createAccessDeniedException('Vous devez avoir emprunté ce livre pour y accéder.');
+        }
+        
         if (!$book) {
             throw $this->createNotFoundException('Livre introuvable.');
         }
 
-        // Path to the PDF file
         $pdfPath = $this->getParameter('kernel.project_dir') . '/public/pdf/book.pdf';
 
         return $this->file($pdfPath);
