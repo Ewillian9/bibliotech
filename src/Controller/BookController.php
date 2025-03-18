@@ -44,20 +44,20 @@ class BookController extends AbstractController
     }
 
     // Affiche les détails d'un livre par son ID
-    #[Route('/books/{id}', name: 'book_detail', methods: ['GET'])]
-public function bookDetail(string $id): Response
-{
-    try {
-        // Récupère les détails du livre par son ID
-        $bookDetails = $this->googleBooksService->getBookById($id);
-        
-        return $this->render('book/detail.html.twig', [
-            'book' => $bookDetails,
-        ]);
-    } catch (\Exception $e) {
-        // Affiche un message d'erreur sans template spécifique
-        return new Response('<h1>Erreur</h1><p>Le livre n\'a pas été trouvé ou il y a eu un problème lors de la récupération des détails.</p>', 500);
+    #[Route('/book/{id}', name: 'book_detail', methods: ['GET'])]
+    public function bookDetail(string $id): Response
+    {
+        try {
+            // Récupère les détails du livre par son ID
+            $bookDetails = $this->googleBooksService->getBookById($id);
+            
+            return $this->render('book/detail.html.twig', [
+                'book' => $bookDetails,
+            ]);
+        } catch (\Exception $e) {
+            // Affiche un message d'erreur sans template spécifique
+            return new Response('<h1>Erreur</h1><p>Le livre n\'a pas été trouvé ou il y a eu un problème lors de la récupération des détails.</p>', 500);
+        }
     }
-}
 
 }
