@@ -33,4 +33,3 @@ class LoanController extends AbstractController
         ]);
     }
 }
-
