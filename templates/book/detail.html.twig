@@ -46,16 +46,14 @@
 					{# {% if book.rating is not null %}
 										                            <p class="text-gray-700 mb-4">⭐ {{ book.rating }}/5</p>
 										                    {% endif %} #}
-                    <!--- Bouton "Télécharger le pdf" -->
-                    {% if app.user %}
-                        <a href="{{ path('book_pdf', {'id': book.id }) }}" class="mt-auto inline-block px-6 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition">Télécharger le pdf</a>
-                    {% endif %}
-
-					<!-- Bouton "Emprunter ce livre" -->
-					<a href="{{ path('loan_request', { 'id': book.id }) }}" class="inline-block mt-4 px-6 py-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700 transition">
-						Emprunter ce livre
-					</a>
-
+                  {% if app.user %}
+						{% if hasLoaned %}
+							<a href="{{ path('book_pdf', {'id': book.id }) }}" class="inline-block mt-auto px-6 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition">Télécharger le pdf</a>
+						{% else %}
+                        	<a href="{{ path('loan_request', { 'id': book.id }) }}" class="inline-block mt-auto px-6 py-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700 transition">Emprunter ce livre</a>
+						{% endif %}
+					{% endif %}
+					
 					<a href="{{ path('home') }}" class="mt-auto inline-block px-6 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition">Retour à la liste</a>
 				</div>
 			</div>

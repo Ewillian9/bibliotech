@@ -3,40 +3,128 @@
 {% block title %}Page d'accueil{% endblock %}
 
 {% block body %}
-    <div class="container mx-auto p-6">
-        <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">Liste des livres</h1>
+<div class="container mx-auto px-6 py-10">
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {% for book in books %}
-                <div class="bg-white p-4 rounded-lg shadow-lg transition transform hover:shadow-2xl hover:scale-105 flex flex-col">
-                    <h2 class="text-xl font-semibold mb-2 text-gray-800">
-                        {{ book.title }}
-                    </h2>
+    <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">Liste des livres</h1>
 
-                    {% if book.thumbnail %}
-                        <img src="{{ book.thumbnail }}" alt="Image de {{ book.title }}" class="w-full h-56 mb-4 rounded-md object-cover">
-                    {% else %}
-                        <p class="h-56 w-full bg-gray-300 flex items-center justify-center text-gray-500 mb-4 rounded-md">
-                            Pas d'image disponible
-                        </p>
-                    {% endif %}
+    <!-- ✅ Barre de filtres -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <h2 class="text-lg font-semibold mb-4">🔍 Filtrer les livres</h2>
+        <form id="filter-form" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <!-- Titre / Auteur (champ de recherche combiné) -->
+            <input type="text" id="search-query" class="p-2 border border-gray-300 rounded"
+                   placeholder="Titre ou auteur...">
+            <!-- Genre -->
+            <input type="text" id="search-genre" class="p-2 border border-gray-300 rounded"
+                   placeholder="Genre... (ex: Science-Fiction)">
 
-                    {% if book.authors %}
-                        <p class="text-sm text-gray-600">par {{ book.authors|join(', ') }}</p>
-                    {% else %}
-                        <p class="text-sm text-gray-600">Auteur(s) inconnu(s)</p>
-                    {% endif %}
-
-                    {# {% if book.rating is not null %}
-                        <p class="text-sm text-gray-500 mt-1">⭐ {{ book.rating }}/5</p>
-                    {% endif %} #}
-
-                    <a href="{{ path('book_detail', {'id': book.id}) }}" class="mt-auto inline-block bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition">
-                        Voir les détails
-                    </a>
-                </div>
-            {% endfor %}
-        </div>
+            <!-- Tri par popularité (optionnel) -->
+            <select id="search-popularity" class="p-2 border border-gray-300 rounded">
+                <option value="">Trier popularité</option>
+                <option value="desc">Pop - Desc</option>
+                <option value="asc">Pop - Asc</option>
+            </select>
+        </form>
     </div>
+
+    <!-- ✅ Section : Liste des livres -->
+    <div id="book-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for book in books %}
+            <div class="book-card bg-white p-4 rounded-lg shadow-lg transition transform hover:shadow-2xl hover:scale-105 flex flex-col"
+                 data-title="{{ book.title|lower }}"
+                 data-authors="{% if book.authors %}{{ book.authors|join(', ')|lower }}{% else %}inconnu{% endif %}"
+                 data-genre="{{ book.genre is defined ? (book.genre|lower) : '' }}"
+                 data-rating="{{ book.rating is defined ? (book.rating|default(0)) : 0 }}"
+            >
+                <h2 class="text-xl font-semibold mb-2 text-gray-800">
+                    {{ book.title }}
+                </h2>
+
+                {% if book.thumbnail %}
+                    <img src="{{ book.thumbnail }}" alt="Image de {{ book.title }}"
+                         class="w-full h-56 mb-4 rounded-md object-cover">
+                {% else %}
+                    <p class="h-56 w-full bg-gray-300 flex items-center justify-center text-gray-500 mb-4 rounded-md">
+                        Pas d'image disponible
+                    </p>
+                {% endif %}
+
+                {% if book.authors %}
+                    <p class="text-sm text-gray-600">par {{ book.authors|join(', ') }}</p>
+                {% else %}
+                    <p class="text-sm text-gray-600">Auteur(s) inconnu(s)</p>
+                {% endif %}
+
+                {% if book.rating is defined %}
+                    <p class="text-sm text-gray-500 mt-1">⭐ {{ book.rating }}/5</p>
+                {% endif %}
+
+                <!-- Lien vers la page de détails -->
+                <a href="{{ path('book_detail', {'id': book.id}) }}"
+                   class="mt-auto inline-block bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition">
+                   Voir les détails
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- ✅ JS pour filtrer/trier -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const filterForm = document.getElementById("filter-form");
+    const searchQuery = document.getElementById("search-query");
+    const searchGenre = document.getElementById("search-genre");
+    const searchPopularity = document.getElementById("search-popularity");
+    const bookList = document.getElementById("book-list");
+    
+    // Récupère toutes les cartes
+    const books = [...document.querySelectorAll(".book-card")];
+
+    // Sur chaque frappe / changement de filtre
+    filterForm.addEventListener("input", function () {
+        // Valeurs saisies
+        const queryVal = (searchQuery.value || "").toLowerCase().trim();
+        const genreVal = (searchGenre.value || "").toLowerCase().trim();
+        const popVal = searchPopularity.value; // "", "desc", "asc"
+
+        // 1) Filtrage
+        books.forEach(book => {
+            const titleData = book.dataset.title || "";
+            const authorsData = book.dataset.authors || "";
+            const genreData = book.dataset.genre || "";
+
+            let matchesQuery = titleData.includes(queryVal) || authorsData.includes(queryVal);
+            let matchesGenre = genreData.includes(genreVal);
+
+            // On affiche seulement si ça matche
+            if (matchesQuery && matchesGenre) {
+                book.style.display = "block";
+            } else {
+                book.style.display = "none";
+            }
+        });
+
+        // 2) Tri par popularité
+        if (popVal === "desc") {
+            // tri décroissant
+            books.sort((a, b) => parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating));
+        } else if (popVal === "asc") {
+            // tri croissant
+            books.sort((a, b) => parseFloat(a.dataset.rating) - parseFloat(b.dataset.rating));
+        }
+
+        // 3) Réordonner dans le DOM
+        bookList.innerHTML = "";
+        books.forEach(book => {
+            // On n'ajoute que ceux qui sont visibles
+            if (book.style.display !== "none") {
+                bookList.appendChild(book);
+            }
+        });
+    });
+});
+</script>
 {% endblock %}
+
 
