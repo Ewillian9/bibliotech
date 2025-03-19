@@ -66,7 +66,6 @@ Bibliotech is a web application that allows users to browse books, view book det
 2. Install dependencies:
    ```sh
    composer install
-   npm install
    ```
 3. Configure environment variables:
    ```sh
@@ -74,7 +73,7 @@ Bibliotech is a web application that allows users to browse books, view book det
    ```
 4. Run the application:
    ```sh
-   symfony server:start
+   symfony serve
    ```
 
 ## License
