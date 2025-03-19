@@ -31,6 +31,19 @@ Bibliotech is a web application that allows users to browse books, view book det
 
 - `/user/{id}/loans` - **User Loans**
   - Lists all the books borrowed by the logged-in user.
+ 
+- `/user/{id}/profile` - **User Profile**
+  - User Profile page.
+
+- `/loan/return/{id]` - **Return a book**
+  - Used to return a book.
+
+- `/user/request/{id}` - **Loan a book**
+  - Used to loan a book.
+    
+- `/user/{id}/pdf` - **Book PDF**
+  - Download link of the pdf.
+
 
 ### Admin Routes (Restricted to Admin Users)
 
@@ -65,4 +78,4 @@ Bibliotech is a web application that allows users to browse books, view book det
    ```
 
 ## License
-ask ur mom
+oui
